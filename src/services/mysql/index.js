@@ -13,7 +13,9 @@ const errorHandler = (error, msg, rejectFunction) => {
 }
 
 const usersModule = require('./users')({ connection, errorHandler })
+const authModule = require('./auth')({ connection, errorHandler })
 
 module.exports = {
-    users: () => usersModule
+    users: () => usersModule,
+    auth: () => authModule
 };

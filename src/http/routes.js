@@ -6,6 +6,16 @@ const routes = (server) => {
         next();
     });
 
+    server.post('/login', async (req, res) => {
+        try {
+            const { email, password } = req.body;
+            const users = await db.auth().authenticate(email, password);
+            res.send(users);
+        } catch (error) {
+            res.send(error);
+        }
+    });
+
     server.get('/users', async (req, res) => {
         try {
             const users = await db.users().all();

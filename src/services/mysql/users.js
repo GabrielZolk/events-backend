@@ -1,10 +1,12 @@
+const sha1 = require('sha1');
+
 const users = deps => {
     return {
         all: () => {
             return new Promise((resolve, reject) => {
                 const { connection, errorHandler } = deps;
                 
-                connection.query('SELECT * FROM users', (error, results) => {
+                connection.query('SELECT id, email FROM users', (error, results) => {
                     if (error) {
                         errorHandler(error, 'Failed to list users', reject);
                         return false;
@@ -17,12 +19,12 @@ const users = deps => {
             return new Promise((resolve, reject) => {
                 const { connection, errorHandler } = deps;
                 
-                connection.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, password], (error, results) => {
+                connection.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, sha1(password)], (error, results) => {
                     if (error) {
                         errorHandler(error, 'Failed to save users', reject);
                         return false;
                     }
-                    resolve({ users: { id: results.insertId, name, email, password } });
+                    resolve({ users: { id: results.insertId, name, email } });
                 });
             });
         },
@@ -30,12 +32,12 @@ const users = deps => {
             return new Promise((resolve, reject) => {
                 const { connection, errorHandler } = deps;
                 
-                connection.query('UPDATE users SET password = ? WHERE id = ?', [password, id], (error, results) => {
+                connection.query('UPDATE users SET password = ? WHERE id = ?', [sha1(password), id], (error, results) => {
                     if (error || !results.affectedRows) {
                         errorHandler(error, 'Failed to update users', reject);
                         return false;
                     }
-                    resolve({ users: { id, newPassword: password } });
+                    resolve({ users: { msg: 'Success!' } });
                 });
             });
         },
