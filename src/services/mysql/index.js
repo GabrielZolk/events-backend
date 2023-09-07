@@ -12,10 +12,16 @@ const errorHandler = (error, msg, rejectFunction) => {
     rejectFunction({ error: msg })
 }
 
-const usersModule = require('./users')({ connection, errorHandler })
 const authModule = require('./auth')({ connection, errorHandler })
+const usersModule = require('./users')({ connection, errorHandler })
+const contactsModule = require('./contacts')({ connection, errorHandler })
+const tagsModule = require('./tags')({ connection, errorHandler })
+const eventsModule = require('./events')({ connection, errorHandler })
 
 module.exports = {
     users: () => usersModule,
-    auth: () => authModule
+    auth: () => authModule,
+    contacts: () => contactsModule,
+    tags: () => tagsModule,
+    events: () => eventsModule
 };
