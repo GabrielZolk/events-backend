@@ -214,7 +214,29 @@ const routes = (server) => {
         } catch (error) {
             res.send(error);
         }
-    })
+    });
+
+
+    // Others
+
+    server.get('/users/:id/events', async (req, res) => {
+        const { id } = req.params;
+        try {
+            res.send(await db.users().getEventsByUser(id));
+        } catch (error) {
+            res.send(error);
+        }
+    });
+    
+    server.get('/users/:id/contacts', async (req, res) => {
+        const { id } = req.params;
+        try {
+            res.send(await db.users().getContactsByUser(id));
+        } catch (error) {
+            res.send(error);
+        }
+    });
+    
 };
 
 module.exports = routes;

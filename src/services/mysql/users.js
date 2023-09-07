@@ -67,6 +67,36 @@ const users = deps => {
                 });
             });
         },
+        getEventsByUser: (id) => {
+            return new Promise((resolve, reject) => {
+                const { connection, errorHandler } = deps;
+                
+                const query = 'SELECT * FROM events WHERE users_id = ?';
+
+                connection.query(query, [id], (error, results) => {
+                    if (error) {
+                        errorHandler(error, 'Failed to fetch events from user', reject);
+                        return false;
+                    }
+                    resolve({ events: results });
+                });
+            });
+        },
+        getContactsByUser: (id) => {
+            return new Promise((resolve, reject) => {
+                const { connection, errorHandler } = deps;
+
+                const query = 'SELECT * FROM contacts WHERE users_id = ?';
+
+                connection.query(query, [id], (error, results) => {
+                    if (error) {
+                        errorHandler(error, 'Failed to find contacts by user ID', reject);
+                        return false;
+                    }
+                    resolve({ contacts: results });
+                });
+            });
+        },
     }
 }
 
