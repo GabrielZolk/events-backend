@@ -4,7 +4,7 @@ const cors = require('../server/cors');
 const server = restify.createServer();
 const jwtMiddleware = require('./jwt-middleware')
 
-const exclusions = ['/login']
+const exclusions = ['/login', '/users']
 
 server.pre(cors.preflight);
 server.use(cors.actual);

@@ -6,7 +6,7 @@ const auth = deps => {
         authenticate: (email, password) => {
             return new Promise((resolve, reject) => {
                 const { connection, errorHandler } = deps;
-                const queryString = 'SELECT id, email FROM users WHERE email = ? and password = ?';
+                const queryString = 'SELECT id, email, name  FROM users WHERE email = ? and password = ?';
                 const queryData = [email, sha1(password)] 
                 
                 connection.query(queryString, queryData, (error, results) => {
@@ -14,10 +14,10 @@ const auth = deps => {
                         errorHandler(error, 'Failed to login', reject);
                         return false;
                     }
-                    const { email, id } = results[0];
-                    const token = jwt.sign({ email, id }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 });
+                    const { email: userEmail, id, name } = results[0];
+                    const token = jwt.sign({ email: userEmail, id }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 });
 
-                    resolve({ token });
+                    resolve({ token, user: { id, userEmail, name} });
                 });
             });
         },
