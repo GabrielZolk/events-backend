@@ -55,9 +55,9 @@ const routes = (server) => {
     });
     
     server.put('/users', async (req, res) => {
-        const { id, password } = req.body;
+        const { id, name, email, profile_picture } = req.body;
         try {
-            res.send(await db.users().update(id, password));
+            res.send(await db.users().update(id, name, email, profile_picture));
         } catch (error) {
             res.send(error);
         }
@@ -236,7 +236,16 @@ const routes = (server) => {
             res.send(error);
         }
     });
-    
+
+    server.put('/users/password', async (req, res) => {
+        const { id, currentPassword, newPassword } = req.body;
+        try {
+            res.send(await db.users().changePassword(id, currentPassword, newPassword));
+        } catch (error) {
+            res.send(error);
+        }
+    });
 };
+
 
 module.exports = routes;

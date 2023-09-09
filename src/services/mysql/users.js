@@ -19,7 +19,7 @@ const users = deps => {
             return new Promise((resolve, reject) => {
                 const { connection, errorHandler } = deps;
         
-                connection.query('SELECT id, name, email FROM users WHERE id = ?', [id], (error, results) => {
+                connection.query('SELECT id, name, email, profile_picture FROM users WHERE id = ?', [id], (error, results) => {
                     if (error) {
                         errorHandler(error, 'Failed to find user by ID', reject);
                         return false;
@@ -41,11 +41,11 @@ const users = deps => {
                 });
             });
         },
-        update: (id, password) => {
+        update: (id, name, email, profile_picture) => {
             return new Promise((resolve, reject) => {
                 const { connection, errorHandler } = deps;
                 
-                connection.query('UPDATE users SET password = ? WHERE id = ?', [sha1(password), id], (error, results) => {
+                connection.query('UPDATE users SET name = ?, email = ?, profile_picture = ? WHERE id = ?', [name, email, profile_picture, id], (error, results) => {
                     if (error || !results.affectedRows) {
                         errorHandler(error, 'Failed to update users', reject);
                         return false;
@@ -94,6 +94,19 @@ const users = deps => {
                         return false;
                     }
                     resolve({ contacts: results });
+                });
+            });
+        },
+        changePassword: (id, currentPassword, newPassword) => {
+            return new Promise((resolve, reject) => {
+                const { connection, errorHandler } = deps;
+                
+                connection.query('UPDATE users SET password = ? WHERE id = ? AND password = ?', [sha1(newPassword), id, sha1(currentPassword)], (error, results) => {
+                    if (error || !results.affectedRows) {
+                        errorHandler(error, 'Failed to update password', reject);
+                        return false;
+                    }
+                    resolve({ users: { msg: 'Success!' } });
                 });
             });
         },
