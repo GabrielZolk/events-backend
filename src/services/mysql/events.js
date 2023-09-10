@@ -19,7 +19,7 @@ const events = deps => {
             return new Promise((resolve, reject) => {
                 const { connection, errorHandler } = deps;
         
-                connection.query('SELECT * FROM events WHERE id = ?', [id], (error, results) => {
+                connection.query('SELECT * FROM events WHERE users_id = ?', [id], (error, results) => {
                     if (error) {
                         errorHandler(error, 'Failed to find event by ID', reject);
                         return false;
@@ -41,13 +41,13 @@ const events = deps => {
                 });
             });
         },
-        update: (id, title, description, start_datetime, end_datetime, color, users_id) => {
+        update: (id, title, description, start_datetime, end_datetime, color) => {
             return new Promise((resolve, reject) => {
                 const { connection, errorHandler } = deps;
                 
                 connection.query(
-                    'UPDATE events SET title = ?, description = ?, start_datetime = ?, end_datetime = ?, color = ?, users_id = ? WHERE id = ?',
-                    [title, description, start_datetime, end_datetime, color, users_id, id],
+                    'UPDATE events SET title = ?, description = ?, start_datetime = ?, end_datetime = ?, color = ? WHERE id = ?',
+                    [title, description, start_datetime, end_datetime, color, id],
                     (error, results) => {
                         if (error || !results.affectedRows) {
                             errorHandler(error, 'Failed to update events', reject);

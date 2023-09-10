@@ -12,6 +12,7 @@ const jwtMiddleware = (deps) => {
             try {
                 req.decoded = jwt.verify(token, process.env.JWT_SECRET)
             } catch (error) {
+                console.log(error)
                 res.send(403, { error: 'Failed to auth token' });
                 return false;
             }
