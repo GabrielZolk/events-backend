@@ -18,6 +18,7 @@
     "sha1": "^1.1.1"
   },
   "dependencies": {
+    "body-parser": "^1.20.2",
     "restify-cors-middleware2": "^2.2.1"
   }
 }

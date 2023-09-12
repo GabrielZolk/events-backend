@@ -8,7 +8,7 @@ const exclusions = ['/login', '/users']
 
 server.pre(cors.preflight);
 server.use(cors.actual);
-server.use(restify.plugins.bodyParser())
+server.use(restify.plugins.bodyParser());
 server.use(jwtMiddleware({ exclusions }));
 
 routes(server);

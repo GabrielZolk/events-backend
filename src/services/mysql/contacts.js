@@ -66,6 +66,41 @@ const contacts = deps => {
                 });
             });
         },
+        getContactsFromEvent: (event_id) => {
+            return new Promise((resolve, reject) => {
+                const { connection, errorHandler } = deps;
+                
+                connection.query(`
+                SELECT contacts.*
+                FROM events_has_contacts
+                INNER JOIN contacts ON events_has_contacts.contacts_id = contacts.id
+                WHERE events_has_contacts.events_id = ?
+            `, [event_id], (error, results) => {
+                    if (error) {
+                        errorHandler(error, 'Failed', reject);
+                        return false;
+                    }
+                    resolve({ results });
+                });
+            });
+        },
+        delContactsFromEvent: (evento_id, contact_id) => {
+            return new Promise((resolve, reject) => {
+                const { connection, errorHandler } = deps;
+                
+                connection.query(`
+                DELETE FROM events_has_contacts
+                WHERE events_id = ?
+                AND contacts_id = ?;
+            `, [evento_id, contact_id], (error, results) => {
+                    if (error) {
+                        errorHandler(error, 'Failed', reject);
+                        return false;
+                    }
+                    resolve({ results });
+                });
+            });
+        },
     }
 }
 

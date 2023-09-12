@@ -43,8 +43,8 @@ const routes = (server) => {
         } catch (error) {
             res.send(error);
         }
-    });    
-    
+    });
+
     server.post('/users', async (req, res) => {
         const { name, email, password } = req.body;
         try {
@@ -53,7 +53,7 @@ const routes = (server) => {
             res.send(error);
         }
     });
-    
+
     server.put('/users', async (req, res) => {
         const { id, name, email, profile_picture } = req.body;
         try {
@@ -88,6 +88,25 @@ const routes = (server) => {
         const { id } = req.params;
         try {
             res.send(await db.contacts().findById(id));
+        } catch (error) {
+            res.send(error);
+        }
+    });
+
+    server.get('/evento-contato/:eventos_id', async (req, res) => {
+
+        const { eventos_id } = req.params;
+        try {
+            res.send(await db.contacts().getContactsFromEvent(eventos_id));
+        } catch (error) {
+            res.send(error);
+        }
+    });
+
+    server.del('/evento-contato/:eventos_id/:contact_id', async (req, res) => {
+        const { eventos_id, contact_id } = req.params;
+        try {
+            res.send(await db.contacts().delContactsFromEvent(eventos_id, contact_id));
         } catch (error) {
             res.send(error);
         }
@@ -168,6 +187,14 @@ const routes = (server) => {
         }
     })
 
+    server.del('/event-tag/:events_id/:tag_id', async (req, res) => {
+        const { events_id, tag_id } = req.params;
+        try {
+            res.send(await db.tags().delTagsFromEvent(events_id, tag_id));
+        } catch (error) {
+            res.send(error);
+        }
+    });
 
     // Events
 
@@ -227,7 +254,7 @@ const routes = (server) => {
             res.send(error);
         }
     });
-    
+
     server.get('/users/:id/contacts', async (req, res) => {
         const { id } = req.params;
         try {
@@ -245,6 +272,44 @@ const routes = (server) => {
             res.send(error);
         }
     });
+
+    server.post('/event-contact', async (req, res) => {
+        const { event_id, contact_id } = req.body;
+        try {
+            res.send(await db.events().saveEventsHasContacts(event_id, contact_id));
+        } catch (error) {
+            res.send(error);
+        }
+    });
+
+    server.post('/tag-event', async (req, res) => {
+        const { event_id, tag_id } = req.body;
+        try {
+            res.send(await db.tags().saveTagsHasEvents(event_id, tag_id));
+        } catch (error) {
+            res.send(error);
+        }
+    });
+
+    server.get('/tag-event/:event_id', async (req, res) => {
+
+        const { event_id } = req.params;
+        try {
+            res.send(await db.tags().getTagsFromEvent(event_id));
+        } catch (error) {
+            res.send(error);
+        }
+    });
+
+    server.get('/all-events/:user_id', async (req, res) => {
+        const { user_id } = req.params;
+        try {
+            res.send(await db.events().getAllEventsWithContactsAndTags(user_id));
+        } catch (error) {
+            res.send(error);
+        }
+    });
+
 };
 
 
